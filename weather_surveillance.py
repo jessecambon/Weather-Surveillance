@@ -76,10 +76,11 @@ Analysis_Var_List = ['Dry Bulb Temperature (F)','Wind Speed',
 nairobi_daily = HourlyToDaily(nairobi,
    Analysis_Var_List,'Date')
 
-
-
 inchon_daily = HourlyToDaily(inchon,
     Analysis_Var_List,'Date')
+
+nairobi_daily.to_csv('nairobi_daily.csv') # Export Data to CSV
+inchon_daily.to_csv('inchon_daily.csv') # Export Data to CSV
 
 
 # Compare
