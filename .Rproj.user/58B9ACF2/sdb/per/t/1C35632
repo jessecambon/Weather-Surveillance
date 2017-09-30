@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1506651172325.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "1C35632",
+    "lastKnownWriteTime" : 5292976843906638626,
+    "last_content_update" : 1506651172325,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "796CAF44",
+        "caption" : "seattle_daily_max",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=seattle_daily_max&cache_key=796CAF44",
+        "displayedObservations" : "365",
+        "environment" : "",
+        "object" : "seattle_daily_max",
+        "preview" : "0",
+        "totalObservations" : "365",
+        "variables" : "2"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
