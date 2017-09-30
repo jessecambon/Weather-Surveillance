@@ -10,6 +10,8 @@ import pandas as pd
 
 # https://mpld3.github.io/_downloads/interactive_legend.html
 # https://pandas.pydata.org/pandas-docs/stable/visualization.html
+# http://mpld3.github.io/
+# https://scrapy.org/
 
 # This function takes a hourly weather dataset and turns it into a daily dataset
 # dataset is the pandas dataframe name
@@ -52,6 +54,7 @@ def HourlyToDaily(dataset,variable_list,key):
         dataset_daily['Min ' + variable] = dataset.groupby(key)[variable].max().values
         dataset_daily['Mean ' + variable] = dataset.groupby(key)[variable].mean().values
         dataset_daily['Total ' + variable] = dataset.groupby(key)[variable].sum().values
+        
     return dataset_daily
 
 
@@ -72,6 +75,9 @@ Analysis_Var_List = ['Dry Bulb Temperature (F)','Wind Speed',
 # Convert to Daily Data
 nairobi_daily = HourlyToDaily(nairobi,
    Analysis_Var_List,'Date')
+
+
+
 inchon_daily = HourlyToDaily(inchon,
     Analysis_Var_List,'Date')
 
