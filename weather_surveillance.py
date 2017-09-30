@@ -9,6 +9,7 @@ Created on Sat Sep 30 09:36:29 2017
 import pandas as pd
 
 # https://mpld3.github.io/_downloads/interactive_legend.html
+# https://pandas.pydata.org/pandas-docs/stable/visualization.html
 
 # This function takes a hourly weather dataset and turns it into a daily dataset
 # dataset is the pandas dataframe name
@@ -41,30 +42,49 @@ def ImportFile(filename):
     return imported_file
 
 
-
-def HourlyToDaily(dataset,variable,key):
+def HourlyToDaily(dataset,variable_list,key):
       
     dataset_daily = dataset[key].drop_duplicates().to_frame().reset_index()
     
+    for variable in variable_list:
     # need the .values part because indexes do not match
-    dataset_daily['Max ' + variable] = dataset.groupby(key)[variable].max().values
-    dataset_daily['Min ' + variable] = dataset.groupby(key)[variable].max().values
-    dataset_daily['Mean ' + variable] = dataset.groupby(key)[variable].mean().values
+        dataset_daily['Max ' + variable] = dataset.groupby(key)[variable].max().values
+        dataset_daily['Min ' + variable] = dataset.groupby(key)[variable].max().values
+        dataset_daily['Mean ' + variable] = dataset.groupby(key)[variable].mean().values
+        dataset_daily['Total ' + variable] = dataset.groupby(key)[variable].sum().values
     return dataset_daily
 
 
 def CompareWeather(input1,input2,variable,key):
     compare = input1.merge(input2,on=key)
-    compare.plot(x=key,y=[variable + '_x',variable + '_y'],kind='line')
+    compare.plot(x=key,y=[variable + '_x',variable + '_y'],kind='line',figsize=(16,9))
 
 
 # Import CSV
 nairobi = ImportFile('KEN_Nairobi-Wilson.637420_SWERA.epw')
 inchon = ImportFile('KOR_Inchon.471120_IWEC.epw')
 
+# These are quantities I am interested in
+Analysis_Var_List = ['Dry Bulb Temperature (F)','Wind Speed',
+        'Relative Humidity','Snow Depth','Liquid Precipitation Depth',
+     'Liquid Precipitation Rate']
+
 # Convert to Daily Data
-nairobi_daily = HourlyToDaily(nairobi,'Dry Bulb Temperature (F)','Date')
-inchon_daily = HourlyToDaily(inchon,'Dry Bulb Temperature (F)','Date')
+nairobi_daily = HourlyToDaily(nairobi,
+   Analysis_Var_List,'Date')
+inchon_daily = HourlyToDaily(inchon,
+    Analysis_Var_List,'Date')
+
 
 # Compare
 CompareWeather(inchon_daily,nairobi_daily,'Max Dry Bulb Temperature (F)','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Min Dry Bulb Temperature (F)','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Mean Dry Bulb Temperature (F)','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Max Wind Speed','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Mean Wind Speed','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Mean Relative Humidity','Date')
+
+# There variables are missing
+#CompareWeather(inchon_daily,nairobi_daily,'Total Liquid Precipitation Depth','Date')
+#CompareWeather(inchon_daily,nairobi_daily,'Total Liquid Precipitation Rate','Date')
+#CompareWeather(inchon_daily,nairobi_daily,'Total Snow Depth','Date')
