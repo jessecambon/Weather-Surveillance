@@ -7,8 +7,7 @@ import requests
 
 root = 'https://energyplus.net'
 
-
-          
+        
 # Downloads a file from a given URL to a specified subfolder            
 def download_file(url,subfolder_name):
     local_filename = url.split('/')[-1]

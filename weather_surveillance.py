@@ -5,8 +5,20 @@ Created on Sat Sep 30 09:36:29 2017
 @author: cambonator
 """
 
-
+import pylab as plot
 import pandas as pd
+
+
+# Change plot parameters
+params = { 'legend.fontsize': 25,
+          'font.size': 15,
+          'axes.titlesize' : 25,
+          'axes.labelsize' : 25
+          }
+plot.rcParams.update(params)
+
+# To see plot parameters
+#plot.rcParams.keys()
 
 # https://mpld3.github.io/_downloads/interactive_legend.html
 # https://pandas.pydata.org/pandas-docs/stable/visualization.html
@@ -58,9 +70,14 @@ def HourlyToDaily(dataset,variable_list,key):
     return dataset_daily
 
 
-def CompareWeather(input1,input2,variable,key):
-    compare = input1.merge(input2,on=key)
-    compare.plot(x=key,y=[variable + '_x',variable + '_y'],kind='line',figsize=(16,9))
+# Plots metrics from two different weather files against each other
+def CompareWeather(input1,input2,name1,name2,variable,key):
+   # I renamed the variable to force the label on the plot for now
+    compare = input1.merge(input2,on=key).rename(columns={variable + '_x': name1,
+                            variable + '_y': name2                       
+            })
+   # print(compare.dtypes)
+    compare.plot(x=key,y=[name1,name2],kind='line',figsize=(16,9),title=variable)
 
 
 # Import CSV
@@ -79,17 +96,21 @@ nairobi_daily = HourlyToDaily(nairobi,
 inchon_daily = HourlyToDaily(inchon,
     Analysis_Var_List,'Date')
 
-nairobi_daily.to_csv('nairobi_daily.csv') # Export Data to CSV
-inchon_daily.to_csv('inchon_daily.csv') # Export Data to CSV
+# Exports
+#nairobi_daily.to_csv('nairobi_daily.csv') # Export Data to CSV
+#inchon_daily.to_csv('inchon_daily.csv') # Export Data to CSV
 
 
 # Compare
-CompareWeather(inchon_daily,nairobi_daily,'Max Dry Bulb Temperature (F)','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Min Dry Bulb Temperature (F)','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Mean Dry Bulb Temperature (F)','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Max Wind Speed','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Mean Wind Speed','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Mean Relative Humidity','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Dry Bulb Temperature (F)','Date')
+
+
+
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Min Dry Bulb Temperature (F)','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Dry Bulb Temperature (F)','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Wind Speed','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Wind Speed','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Relative Humidity','Date')
 
 # There variables are missing
 #CompareWeather(inchon_daily,nairobi_daily,'Total Liquid Precipitation Depth','Date')
