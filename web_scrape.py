@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 #import urllib.request
 import requests
+import pandas as pd
 
 # This program downloads all our Weather File Data to A Subfolder
 
@@ -41,6 +42,9 @@ def scrape_links(url):
 
 import re
 
+# Initialize index
+Index = pd.DataFrame(columns=['Region','Country','City','Filename']) # Create empty dataframe
+    
 for region in scrape_links(root + '/weather'): # Regions
     for country in scrape_links(root + region):
         for city in scrape_links(root + country):
@@ -49,8 +53,13 @@ for region in scrape_links(root + '/weather'): # Regions
                     #print(root + file)
                     
                     ### Uncomment download_file line to actually download the files
+                    a = pd.DataFrame([[region.split('/')[-1],file.split('/')[-1].split('_')[0],re.split('\\.\d|_',file.split('/')[-1])[1],file.split('/')[-1]]],
+            columns=['Region','Country','City','Filename'])
+                    Index = Index.append(a)
+                    #print ('Region: ' + region.split('/')[-1])
                     
                     #download_file(root + file,'Weather Files')
+                    
                     #print(file.split('/')[-1])
                     print("Country: " + file.split('/')[-1].split('_')[0])
                     
