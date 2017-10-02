@@ -39,13 +39,22 @@ def scrape_links(url):
 
 #download_file('https://energyplus.net/weather-location/africa_wmo_region_1/EGY//EGY_Asyut.623930_ETMY/weather-download/africa_wmo_region_1/EGY//EGY_Asyut.623930_ETMY/EGY_Asyut.623930_ETMY.epw','Weather Files')
 
+import re
 
 for region in scrape_links(root + '/weather'): # Regions
     for country in scrape_links(root + region):
         for city in scrape_links(root + country):
             for file in scrape_links(root + city):
                 if '.epw' in file:
-                    print(root + file)
-                    download_file(root + file,'Weather Files')
-                
+                    #print(root + file)
+                    
+                    ### Uncomment download_file line to actually download the files
+                    
+                    #download_file(root + file,'Weather Files')
+                    #print(file.split('/')[-1])
+                    print("Country: " + file.split('/')[-1].split('_')[0])
+                    
+                    # Delimit by . followed by digit an or _ char
+                    print("City: " + re.split('\\.\d|_',file.split('/')[-1])[1])
+               
 

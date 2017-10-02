@@ -16,7 +16,7 @@ DESCRIPTION
 
 INSTRUCTIONS
 
-    Run web_scrap.py file first to scrape all the data files to 
+    Run web_scrape.py file first to scrape all the data files to 
     the subfolder if you don't have the data yet
     
     The UI Index File builds an index that can be used for 
@@ -27,9 +27,12 @@ INSTRUCTIONS
 
 TODO
 
-    Label and organize files by region when I import them
-    Create UI for selecting which cities you want to compare
-    Beautify plots
-        # http://seaborn.pydata.org/examples/
-    Display summary stats and tables
+    - Label and organize files by region when I import them
+    - Rank cities by max wind chill, heat index, etc. ****
+    - Incorporate current and historic weather data (not just typical year)
+    - Improve file download speed
+    - Create UI for selecting which cities you want to compare
+        - just in time delivery of files? (create index without downloading files)
+    - Beautify plots
+    - Display summary stats and tables
     

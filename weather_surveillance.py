@@ -50,6 +50,22 @@ def ImportFile(filename):
     # Convert Temp to Fahrenheit
     imported_file['Dry Bulb Temperature (F)'] = (9/5 * imported_file['Dry Bulb Temperature']) + 32
     
+    imported_file['Heat Index (F)'] = -42.379 + 2.04901523*imported_file['Dry Bulb Temperature (F)']
+    + 10.14333127*imported_file['Relative Humidity'] - .22475541*imported_file['Dry Bulb Temperature (F)']*imported_file['Relative Humidity'] 
+    - .00683783*imported_file['Dry Bulb Temperature (F)']**2 - .05481717*imported_file['Relative Humidity'] **2 
+    + .00122874*imported_file['Dry Bulb Temperature (F)']**2*imported_file['Relative Humidity'] 
+    + .00085282*imported_file['Dry Bulb Temperature (F)']*imported_file['Relative Humidity'] **2 
+    - .00000199*imported_file['Dry Bulb Temperature (F)']**2*imported_file['Relative Humidity']**2
+    # Source: http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
+    
+    # Convert Wind speed to mph
+    imported_file['Wind Speed (mph)'] = 2.23694 * imported_file['Wind Speed']
+    
+    imported_file['Wind Chill'] = 35.74 + (0.6215 * imported_file['Dry Bulb Temperature (F)'])
+    - (35.75 * imported_file['Wind Speed (mph)']**0.16)  \
+    + (0.4275 * imported_file['Dry Bulb Temperature (F)'] * imported_file['Wind Speed (mph)']**0.16 )
+    # Source: https://www.weather.gov/media/epz/wxcalc/windChill.pdf
+    
     # Create daily date key (does not include year) for easy graphing
     imported_file['Date'] = pd.to_datetime((imported_file['Month'].apply(str) + '/' + imported_file['Day'].apply(str)),format='%m/%d').dt.strftime('%m/%d')
     
@@ -85,8 +101,8 @@ nairobi = ImportFile('KEN_Nairobi-Wilson.637420_SWERA.epw')
 inchon = ImportFile('KOR_Inchon.471120_IWEC.epw')
 
 # These are quantities I am interested in
-Analysis_Var_List = ['Dry Bulb Temperature (F)','Wind Speed',
-        'Relative Humidity','Snow Depth','Liquid Precipitation Depth',
+Analysis_Var_List = ['Dry Bulb Temperature (F)', 'Heat Index (F)', 'Wind Speed (mph)',
+        'Relative Humidity','Wind Chill','Liquid Precipitation Depth',
      'Liquid Precipitation Rate']
 
 # Convert to Daily Data
@@ -103,13 +119,11 @@ inchon_daily = HourlyToDaily(inchon,
 
 # Compare
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Dry Bulb Temperature (F)','Date')
-
-
-
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Min Dry Bulb Temperature (F)','Date')
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Dry Bulb Temperature (F)','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Wind Speed','Date')
-CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Wind Speed','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Wind Speed (mph)','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Wind Chill','Date')
+CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Heat Index (F)','Date')
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Relative Humidity','Date')
 
 # There variables are missing
