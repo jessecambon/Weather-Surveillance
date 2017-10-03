@@ -2,15 +2,29 @@ from bs4 import BeautifulSoup
 #import urllib.request
 import requests
 import pandas as pd
+import re
 
 # This program downloads all our Weather File Data to A Subfolder
 
 
 root = 'https://energyplus.net'
 
-        
-# Downloads a file from a given URL to a specified subfolder            
+
+import shutil
+ 
 def download_file(url,subfolder_name):
+    local_filename = url.split('/')[-1]
+    r = requests.get(url, stream=True)
+    with open('./' + subfolder_name + '/' + local_filename, 'wb') as f:
+        shutil.copyfileobj(r.raw, f)
+ 
+    return local_filename
+
+
+        
+# Deprecated --- very slow
+# Downloads a file from a given URL to a specified subfolder            
+def download_file_old(url,subfolder_name):
     local_filename = url.split('/')[-1]
     # NOTE the stream=True parameter
     r = requests.get(url, stream=True)
@@ -37,10 +51,13 @@ def scrape_links(url):
     
     return list_links
 
-
+# test
 #download_file('https://energyplus.net/weather-location/africa_wmo_region_1/EGY//EGY_Asyut.623930_ETMY/weather-download/africa_wmo_region_1/EGY//EGY_Asyut.623930_ETMY/EGY_Asyut.623930_ETMY.epw','Weather Files')
 
-import re
+
+
+
+
 
 # Initialize index
 Index = pd.DataFrame(columns=['Region','Country','City','Filename']) # Create empty dataframe
@@ -58,7 +75,7 @@ for region in scrape_links(root + '/weather'): # Regions
                     Index = Index.append(a)
                     #print ('Region: ' + region.split('/')[-1])
                     
-                    #download_file(root + file,'Weather Files')
+                    download_file(root + file,'Weather Files')
                     
                     #print(file.split('/')[-1])
                     print("Country: " + file.split('/')[-1].split('_')[0])
@@ -66,4 +83,4 @@ for region in scrape_links(root + '/weather'): # Regions
                     # Delimit by . followed by digit an or _ char
                     print("City: " + re.split('\\.\d|_',file.split('/')[-1])[1])
                
-
+Index.to_csv('Index.csv')
