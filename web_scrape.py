@@ -75,6 +75,8 @@ for region in scrape_links(root + '/weather'): # Regions
                     Index = Index.append(a)
                     #print ('Region: ' + region.split('/')[-1])
                     
+                    
+                    #### Comment this line out if you don't want to download
                     download_file(root + file,'Weather Files')
                     
                     #print(file.split('/')[-1])
