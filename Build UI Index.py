@@ -11,7 +11,10 @@ import os
 subfolder = 'Weather Files'
 
 def ExtractCityInfo(filename,subfolder):
-    with open('./' + subfolder + '/' + filename, 'r') as f:
+    try:
+        print('./' + subfolder + '/' + filename)
+        f = open('./' + subfolder + '/' + filename, 'r')
+        
         first_line = f.readline().split(',')
         city = first_line[1]
         country_code = first_line[3]
@@ -23,23 +26,28 @@ def ExtractCityInfo(filename,subfolder):
         print('lat: ' + lat)
         print('long: ' + long)
         print('-------------------')
-    
+        
+
+        f.close()
         return pd.DataFrame([[city,country_code,filename,lat,long]],
             columns=['City','Country Code','Filename','Lat','Long'])
         
+    except IOError:
+        print('Error!')
+        
  # initialize empty dataframe
  # Not very computationally efficient but whatever
- Index = pd.DataFrame(columns=['City','Country Code','Filename','Lat','Long']) # Create empty dataframe
- for filename in os.listdir('./' + subfolder):
+Index = pd.DataFrame(columns=['City','Country Code','Filename','Lat','Long']) # Create empty dataframe
+for filename in os.listdir('./' + subfolder):
     a = ExtractCityInfo(filename,subfolder)
     Index = Index.append(a)
     #print(filename)
     
 Index.to_csv('Index.csv')
 
-filename='KEN_Meru.636950_SWERA.epw'
+#filename='KEN_Meru.636950_SWERA.epw'
 
-a = ExtractCityInfo('BGD_Rangpur.418590_SWERA.epw','Weather Files')
-b = ExtractCityInfo('CHN_Anhui.Bengbu.582210_CSWD.epw','Weather Files')
+#a = ExtractCityInfo('BGD_Rangpur.418590_SWERA.epw','Weather Files')
+#b = ExtractCityInfo('CHN_Anhui.Bengbu.582210_CSWD.epw','Weather Files')
 
     

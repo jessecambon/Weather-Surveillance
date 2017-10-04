@@ -66,8 +66,12 @@ def ImportFile(filename):
     + (0.4275 * imported_file['Dry Bulb Temperature (F)'] * imported_file['Wind Speed (mph)']**0.16 )
     # Source: https://www.weather.gov/media/epz/wxcalc/windChill.pdf
     
+    #### COMMENTED THIS OOUT FOR NOW BECAUSE OF ERROR:
+    # ValueError: day is out of range for month
+    # when iterating through all cities and finding max temp
+    
     # Create daily date key (does not include year) for easy graphing
-    imported_file['Date'] = pd.to_datetime((imported_file['Month'].apply(str) + '/' + imported_file['Day'].apply(str)),format='%m/%d').dt.strftime('%m/%d')
+    #imported_file['Date'] = pd.to_datetime((imported_file['Month'].apply(str) + '/' + imported_file['Day'].apply(str)),format='%m/%d',dayfirst=True).dt.strftime('%m/%d')
     
     return imported_file
 
@@ -125,6 +129,50 @@ CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Wind Speed (mp
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Wind Chill','Date')
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Max Heat Index (F)','Date')
 CompareWeather(inchon_daily,nairobi_daily,'Inchon','Nairobi','Mean Relative Humidity','Date')
+
+
+
+
+
+# Loop through files to calculate max temp etc..
+
+
+subfolder = 'Weather Files'
+# Loop through files
+dataframe_collection = {}
+# Initialize
+City_List = pd.DataFrame(columns=['City','Max Temp']) # Create empty dataframe
+
+#City_List.append(['blah',123])
+
+### Iterate through all cities and find max temperature
+
+import os
+for filename in os.listdir('./' + subfolder):
+    #print('./' + subfolder + '/' + filename)
+    
+    dataframe_collection[filename] = ImportFile('./' + subfolder + '/' + filename)
+    
+    print(filename)
+    
+    a = pd.DataFrame([[filename,dataframe_collection[filename]['Dry Bulb Temperature (F)'].max()]],columns=['City','Max Temp'])
+    City_List = City_List.append(a)
+  
+    
+    #if i == 5:
+    #    break
+    
+# Top 10 cities by temperature
+City_List.set_index('City')['Max Temp'].sort_values(ascending=False).head(20)
+
+ 
+dataframe_collection['USA_IA_Carroll.Muni.AP.725468_TMY3.epw'].to_csv('USA_IA_Carroll_muy_caliente.csv')
+
+
+#for i in (1,2,3):
+#    dataframe_collection[i] = ImportFile('./' + subfolder + '/' + filename)
+
+
 
 # There variables are missing
 #CompareWeather(inchon_daily,nairobi_daily,'Total Liquid Precipitation Depth','Date')
