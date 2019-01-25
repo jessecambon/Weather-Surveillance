@@ -1,7 +1,5 @@
 # Weather-Surveillance
 
-Author: Jesse Cambon, jesse cambon a-t  gmail  <.> com
-
 9/30/2017
 
 DESCRIPTION
